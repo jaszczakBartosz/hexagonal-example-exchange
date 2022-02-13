@@ -1,5 +1,3 @@
-DROP TABLE account;
-
 CREATE TABLE IF NOT EXISTS account
 (
     id       INT              NOT NULL,
