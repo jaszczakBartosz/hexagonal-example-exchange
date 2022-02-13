@@ -10,7 +10,9 @@ import javax.money.Monetary.getCurrency
 class BalanceFacade(private val accountBalanceGetter: AccountBalanceGetter) {
 
     fun get(accountId: Long, currency: String) =
-        accountBalanceGetter.get(AccountBalanceRequest(accountId, getCurrency(currency))).toAccountBalanceDto()
+        accountBalanceGetter
+            .get(AccountBalanceRequest(accountId, getCurrency(currency)))
+            .toAccountBalanceDto()
 }
 
 fun Money.toAccountBalanceDto() = AccountBalanceDto(numberStripped.toPlainString(), currency.currencyCode)
