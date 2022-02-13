@@ -14,13 +14,14 @@ class ExchangeIntegrationTest extends BaseIntegrationTest {
 
     private static final String USD = "USD"
     private static final String EUR = "EUR"
+    private static final int ID = 10
 
     def "should return proper exchanged value for USD"() {
         given:
-        insertAccountBalance(10, valueOf(30.0))
+        insertAccountBalance(ID, valueOf(30.0))
         stubRates(rateResponse(3), USD)
         when:
-        def result = mockMvc.perform(get("/account/10/balance").queryParam("currency", USD).accept(APPLICATION_JSON_VALUE))
+        def result = mockMvc.perform(get("/account/$ID/balance").queryParam("currency", USD).accept(APPLICATION_JSON_VALUE))
         then:
         result
                 .andExpect(status().is2xxSuccessful())
@@ -29,10 +30,10 @@ class ExchangeIntegrationTest extends BaseIntegrationTest {
 
     def "should return proper exchanged value for EUR"() {
         given:
-        insertAccountBalance(10, valueOf(30.0))
+        insertAccountBalance(ID, valueOf(30.0))
         stubRates(rateResponse(2), EUR)
         when:
-        def result = mockMvc.perform(get("/account/10/balance").queryParam("currency", EUR).accept(APPLICATION_JSON_VALUE))
+        def result = mockMvc.perform(get("/account/$ID/balance").queryParam("currency", EUR).accept(APPLICATION_JSON_VALUE))
         then:
         result
                 .andExpect(status().is2xxSuccessful())
@@ -41,10 +42,10 @@ class ExchangeIntegrationTest extends BaseIntegrationTest {
 
     def "should return proper exchanged value for zero balance"() {
         given:
-        insertAccountBalance(10, valueOf(0))
+        insertAccountBalance(ID, valueOf(0))
         stubRates(rateResponse(2), USD)
         when:
-        def result = mockMvc.perform(get("/account/10/balance").queryParam("currency", USD).accept(APPLICATION_JSON_VALUE))
+        def result = mockMvc.perform(get("/account/$ID/balance").queryParam("currency", USD).accept(APPLICATION_JSON_VALUE))
         then:
         result
                 .andExpect(status().is2xxSuccessful())
@@ -53,14 +54,14 @@ class ExchangeIntegrationTest extends BaseIntegrationTest {
 
     def "should return error if there is no account"() {
         when:
-        def result = mockMvc.perform(get("/account/10/balance").queryParam("currency", USD).accept(APPLICATION_JSON_VALUE))
+        def result = mockMvc.perform(get("/account/$ID/balance").queryParam("currency", USD).accept(APPLICATION_JSON_VALUE))
         then:
         result.andExpect(status().is4xxClientError())
     }
 
     def "should return 400 error if currency not present"() {
         when:
-        def result = mockMvc.perform(get("/account/10/balance").accept(APPLICATION_JSON_VALUE))
+        def result = mockMvc.perform(get("/account/$ID/balance").accept(APPLICATION_JSON_VALUE))
         then:
         result.andExpect(status().is4xxClientError())
     }

@@ -56,7 +56,7 @@ class BaseIntegrationTest extends Specification {
     }
 
     def insertAccountBalance(Long id, BigDecimal balance) {
-        dslContext.insertInto(table("account"), field("id"), field("balance")).values(id, balance).execute()
+        dslContext.insertInto(table("account"), field("id"), field("balance"), field("currency")).values(id, balance, "PLN").execute()
     }
 
     def cleanDb() {

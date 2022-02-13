@@ -17,11 +17,11 @@ class ExchangeFacade(private val ratesProvider: RatesProvider) {
             ?.let {
                 balance.exchangeToCurrency(it, currency)
             } ?: throw RatesNotAvailable()
-}
 
-fun Money.exchangeToCurrency(rate: BigDecimal, currency: CurrencyUnit): Money =
-    divide(rate)
-        .factory
-        .setCurrency(currency)
-        .create()
-        .with(rounding(HALF_EVEN, currency.defaultFractionDigits))
+    private fun Money.exchangeToCurrency(rate: BigDecimal, currency: CurrencyUnit): Money =
+        divide(rate)
+            .factory
+            .setCurrency(currency)
+            .create()
+            .with(rounding(HALF_EVEN, currency.defaultFractionDigits))
+}
