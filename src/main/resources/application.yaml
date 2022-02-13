@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:h2:~/exchange
+    username: sa
+    password:
+  sql:
+    init:
+      data-locations: classpath:data.sql
+      schema-locations: classpath:schema.sql
+      mode: always
+rate:
+  cache: "true"
+  url: "http://api.nbp.pl/"

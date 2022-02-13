@@ -1,0 +1,3 @@
+rate:
+  cache: "false"
+  url: "http://localhost:18090/"
