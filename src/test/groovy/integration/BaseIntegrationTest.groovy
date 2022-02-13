@@ -27,7 +27,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 @AutoConfigureMockMvc
 class BaseIntegrationTest extends Specification {
 
-    protected WireMockServer wireMockServer = new WireMockServer(18090)
+    private def wireMockServer = new WireMockServer(18090)
 
     @Autowired
     private DSLContext dslContext
@@ -35,7 +35,7 @@ class BaseIntegrationTest extends Specification {
     @Autowired
     protected MockMvc mockMvc
 
-    ObjectMapper mapper = new ObjectMapper()
+    protected def mapper = new ObjectMapper()
 
     void setup() {
         wireMockServer.start()
@@ -47,7 +47,7 @@ class BaseIntegrationTest extends Specification {
         cleanDb()
     }
 
-    def stubRates(RateResponse rateResponse, String currency) {
+    protected def stubRates(RateResponse rateResponse, String currency) {
         wireMockServer.stubFor(get(urlEqualTo("/api/exchangerates/rates/a/$currency"))
                 .willReturn(aResponse()
                         .withHeader(CONTENT_TYPE.toString(), APPLICATION_JSON_VALUE)
@@ -55,11 +55,11 @@ class BaseIntegrationTest extends Specification {
                         .withStatus(200)))
     }
 
-    def insertAccountBalance(Long id, BigDecimal balance) {
+    protected def insertAccountBalance(Long id, BigDecimal balance) {
         dslContext.insertInto(table("account"), field("id"), field("balance"), field("currency")).values(id, balance, "PLN").execute()
     }
 
-    def cleanDb() {
+    protected def cleanDb() {
         dslContext.deleteFrom(table("account")).execute()
     }
 

@@ -10,12 +10,12 @@ import static org.javamoney.moneta.Money.of
 
 class ExchangeFacadeTest extends Specification {
 
-    def rateProvider = Mock(RatesProvider.class)
-    def exchange = new ExchangeFacade(rateProvider)
+    private def rateProvider = Mock(RatesProvider.class)
+    private def exchange = new ExchangeFacade(rateProvider)
     @Shared
-    def USD = Monetary.getCurrency("USD")
+    private final def USD = Monetary.getCurrency("USD")
     @Shared
-    def PLN = Monetary.getCurrency("PLN")
+    private final def PLN = Monetary.getCurrency("PLN")
 
     def "should return #resultValue when rate is #rate for balance #balance"() {
         given:

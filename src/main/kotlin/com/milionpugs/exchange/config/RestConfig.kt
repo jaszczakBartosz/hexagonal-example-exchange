@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.RestTemplate
 
 @Configuration
-class RestConfig(@Value("\${rate.url}") val baseUrl: String) {
+class RestConfig(@Value("\${rate.url}") private val baseUrl: String) {
     @Bean
     fun rateRestTemplate(): RestTemplate = RestTemplateBuilder().rootUri(baseUrl).build()
 }

@@ -12,9 +12,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class ExchangeIntegrationTest extends BaseIntegrationTest {
 
-    private static final String USD = "USD"
-    private static final String EUR = "EUR"
-    private static final int ID = 10
+    private static final def USD = "USD"
+    private static final def EUR = "EUR"
+    private static final def ID = 10
 
     def "should return proper exchanged value for USD"() {
         given:
