@@ -11,12 +11,15 @@ import javax.money.CurrencyUnit
 
 @Service
 class ExchangeFacade(private val ratesProvider: RatesProvider) {
-    operator fun invoke(balance: Money, currency: CurrencyUnit): Money = ratesProvider.getRate(currency)?.let {
-        balance.exchange(it, currency)
-    } ?: throw RatesNotAvailable()
+    operator fun invoke(balance: Money, currency: CurrencyUnit): Money =
+        ratesProvider
+            .getRate(currency)
+            ?.let {
+                balance.exchangeToCurrency(it, currency)
+            } ?: throw RatesNotAvailable()
 }
 
-fun Money.exchange(rate: BigDecimal, currency: CurrencyUnit): Money =
+fun Money.exchangeToCurrency(rate: BigDecimal, currency: CurrencyUnit): Money =
     divide(rate)
         .factory
         .setCurrency(currency)

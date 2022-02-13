@@ -17,7 +17,11 @@ class AccountBalanceGetterAdapter(
 ) : AccountBalanceGetter {
 
     override fun get(accountBalanceRequest: AccountBalanceRequest): Money = with(accountBalanceRequest) {
-        balanceProvider.get(accountId)?.let { exchange(it.balance, targetCurrency) }
+        balanceProvider
+            .get(accountId)
+            ?.let {
+                exchange(it.balance, targetCurrency)
+            }
     } ?: throw AccountNotFound(accountBalanceRequest.accountId)
 }
 
