@@ -43,6 +43,7 @@ dependencies {
     testImplementation("org.spockframework:spock-core:2.4-M4-groovy-4.0")
     testImplementation("org.spockframework:spock-spring:2.4-M4-groovy-4.0")
     testImplementation("org.apache.groovy:groovy-all:4.0.23")
+    implementation(kotlin("script-runtime"))
 }
 
 tasks.withType<Test> {

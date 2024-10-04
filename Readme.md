@@ -54,7 +54,7 @@ To run the tests, use the following command:
 
 #### Port Layer
 
-```java
+```kotlin
 package com.bartoszjaszczak.exchange.application.port.out
 
 import com.bartoszjaszczak.exchange.application.domain.Balance
@@ -66,49 +66,60 @@ interface BalanceProvider {
 
 #### Domain Layer
 
-```java
-package com.bartoszjaszczak.exchange.application.service;
+```kotlin
+package com.bartoszjaszczak.exchange.application.domain
 
-import com.bartoszjaszczak.exchange.domain.exchange.ExchangeFacade;
-import org.springframework.stereotype.Service;
+import com.bartoszjaszczak.exchange.application.port.out.RatesProvider
+import org.javamoney.moneta.Money
+import org.javamoney.moneta.function.MonetaryOperators.rounding
+import org.springframework.stereotype.Service
+import java.math.BigDecimal
+import java.math.RoundingMode.HALF_EVEN
+import javax.money.CurrencyUnit
 
 @Service
-public class ExchangeService {
-    private final ExchangeFacade exchangeFacade;
+class ExchangeFacade(private val ratesProvider: RatesProvider) {
+    operator fun invoke(balance: Money, currency: CurrencyUnit): Money =
+            ratesProvider
+                    .getRate(currency)
+            ?.let {
+        balance.exchangeToCurrency(it, currency)
+    } ?: throw RatesNotAvailable()
 
-    public ExchangeService(ExchangeFacade exchangeFacade) {
-        this.exchangeFacade = exchangeFacade;
-    }
-
-    public MonetaryAmount getBalance(Long accountId, Currency currency) {
-        // Business logic to get balance
-    }
+    private fun Money.exchangeToCurrency(rate: BigDecimal, currency: CurrencyUnit): Money =
+    divide(rate)
+            .factory
+                    .setCurrency(currency)
+            .create()
+            .with(rounding(HALF_EVEN, currency.defaultFractionDigits))
 }
 ```
 
 #### Adapter Layer
 
-```java
-package com.bartoszjaszczak.exchange.adapter.in.web;
+```kotlin
+package com.bartoszjaszczak.exchange.adapter.`in`
 
-import com.bartoszjaszczak.exchange.application.service.ExchangeService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.bartoszjaszczak.exchange.application.domain.AccountBalanceRequest
+import com.bartoszjaszczak.exchange.application.port.`in`.AccountBalanceGetter
+import jakarta.validation.constraints.Pattern
+import org.javamoney.moneta.Money
+import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.*
+import javax.money.Monetary.getCurrency
 
+@Validated
 @RestController
-public class ExchangeController {
-    private final ExchangeService exchangeService;
+@RequestMapping("account")
+class BalanceEndpoint(private val accountBalanceGetter: AccountBalanceGetter) {
 
-    public ExchangeController(ExchangeService exchangeService) {
-        this.exchangeService = exchangeService;
-    }
-
-    @GetMapping("/account/{id}/balance")
-    public MonetaryAmount getBalance(@PathVariable Long id, @RequestParam Currency currency) {
-        return exchangeService.getBalance(id, currency);
-    }
+    @GetMapping("{id}/balance")
+    fun getBalance(
+            @PathVariable("id") id: Long,
+            @Pattern(regexp = "^(USD|EUR)$") @RequestParam(value = "currency") currency: String
+    ) = accountBalanceGetter
+            .get(AccountBalanceRequest(id, getCurrency(currency)))
+            .toAccountBalanceDto()
 }
 ```
 
