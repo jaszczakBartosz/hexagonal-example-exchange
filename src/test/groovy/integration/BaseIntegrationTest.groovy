@@ -6,7 +6,6 @@ import com.bartoszjaszczak.exchange.common.CacheConfig
 import com.bartoszjaszczak.exchange.common.RestConfig
 import com.bartoszjaszczak.exchange.common.RetryConfig
 import com.bartoszjaszczak.exchange.adapter.out.RateResponse
-import com.maciejwalkowiak.wiremock.spring.EnableWireMock
 import org.jooq.DSLContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc

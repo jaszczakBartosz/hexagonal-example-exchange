@@ -24,26 +24,25 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-jooq")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-cache")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.javamoney:moneta:1.4.2")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.retry:spring-retry:2.0.9")
-    implementation("com.github.ben-manes.caffeine:caffeine:3.0.4")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.0.4")
+    implementation("com.maciejwalkowiak.spring:wiremock-spring-boot:2.1.3")
+    implementation("org.javamoney:moneta:1.4.2")
+
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("org.springframework.boot:spring-boot-starter-jooq")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.retry:spring-retry:2.0.9")
+    implementation(kotlin("script-runtime"))
 
     runtimeOnly("com.h2database:h2")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    implementation("com.maciejwalkowiak.spring:wiremock-spring-boot:2.1.3")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.apache.groovy:groovy-all:4.0.23")
     testImplementation("org.spockframework:spock-core:2.4-M4-groovy-4.0")
     testImplementation("org.spockframework:spock-spring:2.4-M4-groovy-4.0")
-    testImplementation("org.apache.groovy:groovy-all:4.0.23")
-    implementation(kotlin("script-runtime"))
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks.withType<Test> {
