@@ -1,33 +1,33 @@
 package integration
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.tomakehurst.wiremock.WireMockServer
-import com.milionpugs.exchange.ExchangeApplication
-import com.milionpugs.exchange.config.CacheConfig
-import com.milionpugs.exchange.config.RestConfig
-import com.milionpugs.exchange.config.RetryConfig
-import com.milionpugs.exchange.inrastructure.rates.RateResponse
+import com.bartoszjaszczak.exchange.ExchangeApplication
+import com.bartoszjaszczak.exchange.common.CacheConfig
+import com.bartoszjaszczak.exchange.common.RestConfig
+import com.bartoszjaszczak.exchange.common.RetryConfig
+import com.bartoszjaszczak.exchange.adapter.out.RateResponse
+import com.maciejwalkowiak.wiremock.spring.EnableWireMock
 import org.jooq.DSLContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.web.servlet.MockMvc
 import spock.lang.Specification
+import com.github.tomakehurst.wiremock.WireMockServer
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*
-import static org.eclipse.jetty.http.HttpHeader.CONTENT_TYPE
 import static org.jooq.impl.DSL.field
 import static org.jooq.impl.DSL.table
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE
+import static com.github.tomakehurst.wiremock.client.WireMock.*
+
 
 @SpringBootTest(classes = [ExchangeApplication, CacheConfig, RestConfig, RetryConfig],
-        properties = "spring.profiles.active:integration",
+        properties = ["spring.profiles.active:integration", "wiremock.server.port=8080"],
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @AutoConfigureMockMvc
+@EnableWireMock()
 class BaseIntegrationTest extends Specification {
-
-    private def wireMockServer = new WireMockServer(18090)
 
     @Autowired
     private DSLContext dslContext
@@ -35,22 +35,29 @@ class BaseIntegrationTest extends Specification {
     @Autowired
     protected MockMvc mockMvc
 
-    protected def mapper = new ObjectMapper()
+    protected static WireMockServer wireMockServer
 
-    void setup() {
+    def setupSpec() {
+        wireMockServer = new WireMockServer(WireMockConfiguration.options().dynamicPort())
         wireMockServer.start()
+        configureFor("localhost", wireMockServer.port())
     }
 
-    void cleanup() {
+    def cleanupSpec() {
         wireMockServer.stop()
-        wireMockServer.resetAll()
         cleanDb()
     }
 
+    def setup() {
+        wireMockServer.resetAll()
+    }
+
+    protected def mapper = new ObjectMapper()
+
     protected def stubRates(RateResponse rateResponse, String currency) {
-        wireMockServer.stubFor(get(urlEqualTo("/api/exchangerates/rates/a/$currency"))
+        wireMockServer.stubFor(get("/api/exchangerates/rates/a/$currency")
                 .willReturn(aResponse()
-                        .withHeader(CONTENT_TYPE.toString(), APPLICATION_JSON_VALUE)
+                        .withHeader("Content-Type", "application/json")
                         .withBody(mapper.writeValueAsString(rateResponse))
                         .withStatus(200)))
     }

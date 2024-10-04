@@ -1,8 +1,8 @@
 package integration
 
-import com.milionpugs.exchange.inrastructure.api.AccountBalanceDto
-import com.milionpugs.exchange.inrastructure.rates.RateResponse
-import com.milionpugs.exchange.inrastructure.rates.RateValue
+import com.bartoszjaszczak.exchange.adapter.in.AccountBalanceDto
+import com.bartoszjaszczak.exchange.adapter.out.RateResponse
+import com.bartoszjaszczak.exchange.adapter.out.RateValue
 
 import static java.math.BigDecimal.valueOf
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE
@@ -67,7 +67,7 @@ class ExchangeIntegrationTest extends BaseIntegrationTest {
     }
 
     private RateResponse rateResponse(double rate) {
-        new RateResponse([
+        return new RateResponse([
                 new RateValue(valueOf(rate))
         ])
     }

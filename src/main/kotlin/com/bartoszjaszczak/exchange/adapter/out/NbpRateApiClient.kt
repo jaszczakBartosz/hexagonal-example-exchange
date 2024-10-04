@@ -1,6 +1,6 @@
-package com.milionpugs.exchange.inrastructure.rates
+package com.bartoszjaszczak.exchange.adapter.out
 
-import com.milionpugs.exchange.domain.rates.RatesProvider
+import com.bartoszjaszczak.exchange.application.port.out.RatesProvider
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.retry.support.RetryTemplate
 import org.springframework.stereotype.Component

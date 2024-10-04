@@ -1,6 +1,7 @@
-package com.milionpugs.exchange.domain.exchange
+package com.bartoszjaszczak.exchange.domain.exchange
 
-import com.milionpugs.exchange.domain.rates.RatesProvider
+import com.bartoszjaszczak.exchange.application.domain.ExchangeFacade
+import com.bartoszjaszczak.exchange.application.port.out.RatesProvider
 import spock.lang.Shared
 import spock.lang.Specification
 

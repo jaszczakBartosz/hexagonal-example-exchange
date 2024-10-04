@@ -1,7 +1,7 @@
-package com.milionpugs.exchange.inrastructure.h2db
+package com.bartoszjaszczak.exchange.adapter.out
 
-import com.milionpugs.exchange.domain.balance.Balance
-import com.milionpugs.exchange.domain.balance.BalanceProvider
+import com.bartoszjaszczak.exchange.application.domain.Balance
+import com.bartoszjaszczak.exchange.application.port.out.BalanceProvider
 import org.javamoney.moneta.Money.of
 import org.jooq.DSLContext
 import org.jooq.Record

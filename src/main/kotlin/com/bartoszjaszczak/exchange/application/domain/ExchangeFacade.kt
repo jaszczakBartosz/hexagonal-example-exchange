@@ -1,7 +1,6 @@
-package com.milionpugs.exchange.domain.exchange
+package com.bartoszjaszczak.exchange.application.domain
 
-import com.milionpugs.exchange.domain.rates.RatesNotAvailable
-import com.milionpugs.exchange.domain.rates.RatesProvider
+import com.bartoszjaszczak.exchange.application.port.out.RatesProvider
 import org.javamoney.moneta.Money
 import org.javamoney.moneta.function.MonetaryOperators.rounding
 import org.springframework.stereotype.Service
@@ -25,3 +24,5 @@ class ExchangeFacade(private val ratesProvider: RatesProvider) {
             .create()
             .with(rounding(HALF_EVEN, currency.defaultFractionDigits))
 }
+
+class RatesNotAvailable : RuntimeException("Rates are not available now")

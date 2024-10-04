@@ -1,4 +1,4 @@
-package com.milionpugs.exchange.config
+package com.bartoszjaszczak.exchange.common
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.client.RestTemplateBuilder

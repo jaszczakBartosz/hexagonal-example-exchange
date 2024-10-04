@@ -1,4 +1,4 @@
-package com.milionpugs.exchange
+package com.bartoszjaszczak.exchange
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
