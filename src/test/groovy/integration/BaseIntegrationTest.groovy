@@ -22,11 +22,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*
 
 
 @SpringBootTest(classes = [ExchangeApplication, CacheConfig, RestConfig, RetryConfig],
-        properties = ["spring.profiles.active:integration", "wiremock.server.port=8080"],
+        properties = ["spring.profiles.active:integration"],
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @AutoConfigureMockMvc
-@EnableWireMock()
 class BaseIntegrationTest extends Specification {
 
     @Autowired
@@ -38,18 +37,21 @@ class BaseIntegrationTest extends Specification {
     protected static WireMockServer wireMockServer
 
     def setupSpec() {
-        wireMockServer = new WireMockServer(WireMockConfiguration.options().dynamicPort())
+        wireMockServer = new WireMockServer(WireMockConfiguration.options().port(18090))
         wireMockServer.start()
         configureFor("localhost", wireMockServer.port())
     }
 
     def cleanupSpec() {
         wireMockServer.stop()
-        cleanDb()
     }
 
     def setup() {
         wireMockServer.resetAll()
+    }
+
+    def cleanup() {
+        cleanDb()
     }
 
     protected def mapper = new ObjectMapper()
